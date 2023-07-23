@@ -1,51 +1,64 @@
 # New Computer Setup Scripts
-This repository contains the scripts to automatically setup a new computer (Macos and Windows).
+This repository contains the scripts to automatically setup a new computer (Macos, Linux and Windows).
 
-# 1. Installation (Macos)
+# 1. Macos Installation
 
-## 1.1. Macos Software Installation
+## 1.1. Pre-Installation
 
-0. Pre-requisites (Optional)
-* [Norman Layout](https://normanlayout.info/)
-* [Oh-my-zsh](https://ohmyz.sh/#install)
+### Pre-requisites (Optional)
+* Keyboard Layout
+    * [Norman Layout](https://normanlayout.info/)
+    * [Colemak Layout](https://colemak.com/)
 
-1. Install HomeBrew in your computer
-   **Website:**  https://brew.sh/
 
-    Open the Terminal app and execute the following command.
-
-    ```
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    ```
-
-    Verify the installation was successful
-    ```
-    brew --version
-    ```
-
-    **Note:** If the command *brew* is not recognized, verify you have the PATH variable well setup in the ***~/.bashrc*** or ***~/.zshrc*** file. It should include the following line:
-    ```
-    export PATH=/opt/hoebrew/bin:PATH
-    ```
-
-2. Create the base directories
-
-    ```
-    mkdir -p ~/workspace
-    cd ~/workspace
-    ```
-
-3. Clone this repository in Git
-    ```
-    git clone https://github.com/dicotips/init_setup
-    ```
-
-    If you do not have GIT installed, use:  ``` brew install git```
-
-4. Run the following command to install the list of packages from  ```./macos/brew_packages.txt```
+### Create workspace directory
 
 ```
-brew install $(cat ./macos/brew_packages.txt)
+mkdir -p ~/workspace/Bluminds
 ```
 
-5. After the installation, take a close look at the Errors and Warnings displayed in the screen. They might require additional configuration. 
+## 1.1. Clone the Bluminds/devtool repository
+
+```
+cd ~/workspace/Bluminds
+git clone https://github.com/Bluminds/dev_setup
+```
+
+## 1.2. Macos Software Installation
+### 1.2.1. Initial Installation
+
+Execute the following command to install initial dependencies.
+
+```
+cd ~/workspace/Bluminds/dev_setup
+```
+
+```
+./devtool macos init
+```
+and follow the instructions.
+
+**Note:** If the command *brew* is not recognized, verify you have the PATH variable well setup in the ***~/.bashrc*** or ***~/.zshrc*** file. It should include the following line:
+
+```
+export PATH=/opt/homebrew/bin:PATH
+```
+
+Re-open the *Terminal.app* or *iTerm2.app*.
+
+***NOTE:*** After the installation, take a close look at the Errors and Warnings displayed in the screen. They might require additional configuration. 
+
+### 1.2.2. Initial Software
+
+Applications are grouped by category/type. Execute the following command to install/reinstall/uninstall the set of apps.
+
+```
+./devtool macos install system
+./devtool macos install escentials
+./devtool macos install network
+./devtool macos install development
+./devtool macos install productivity
+./devtool macos install media
+./devtool macos install games
+./devtool macos install social
+```

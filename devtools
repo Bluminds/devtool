@@ -1,0 +1,125 @@
+#!/bin/bash
+source .config/settings.sh
+
+# Function to display script usage
+usage() {
+    echo "Usage: $0 <platform> <action> [type]"
+    echo "  Options:"
+    echo "    <platform>           Specify the platform: macos, linux, or windows."
+    echo "    <action>             Specify the action to perform: init, install, uninstall, reinstall or setup."
+    echo "    [type]                Specify the type of setup (applicable only for 'install' or 'setup' actions):"
+    echo "                          - 'system': System-wide setup or configurations."
+    echo "                          - 'network': Setup for network-related tools."
+    echo "                          - 'escentials': Setup for escentials-related tools."
+    echo "                          - 'productivity': Setup for productivity tools."
+    echo "                          - 'development': Setup for development tools."
+    echo "                          - 'media': Setup for media tools."
+    echo "                          - 'social': Setup for social tools."
+    echo "                          - 'games': Setup for games."
+    echo
+    echo "  Examples:"
+    echo "    $0 macos init"
+    echo "    $0 linux install development"
+    echo
+    exit 1
+}
+
+# Check for the number of arguments
+if [ $# -lt 2 ] || [ $# -gt 3 ]; then
+    echo "Error: Invalid number of arguments."
+    usage
+fi
+
+# Read the arguments in order
+platform=$1
+action=$2
+type=$3
+
+# Validate platform argument
+if [[ $platform != "macos" && $platform != "linux" && $platform != "windows" ]]; then
+    echo "Error: Invalid platform. Use one of macos, linux, or windows."
+    usage
+fi
+
+# Validate action argument
+if [[ $action != "init" && $action != "install" && $action != "unistall" && $action != "reinstall" && $action != "setup" ]]; then
+    echo "Error: Invalid action. Use one of init, install, or setup."
+    usage
+fi
+
+# Validate type argument for 'install' and 'setup' actions
+if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == "reinstall" ] || [ "$action" == "setup" ]; then
+    if [ -z "$type" ]; then
+        echo "Error: Missing type argument for '${action}' or 'setup' action."
+        usage
+    elif [[ $type != "internet" && $type != "development" && $type != "system" ]]; then
+        echo "Error: Invalid type. Use one of internet, development, or system."
+        usage
+    fi
+fi
+
+####################################################################################################
+
+# Ask for the sudo password if it's not already inserted.
+# Function to check if the sudo session is already present
+is_sudo_session_present() {
+    sudo -nv true > /dev/null 2>&1
+    return $?
+}
+
+# Check if the sudo session is present
+if is_sudo_session_present; then
+    echo "Sudo session is present."
+    echo
+else
+    echo "This script will require sudo access for the ${action}ation."
+    echo -n "Please enter your sudo "
+    sudo -v
+    echo
+fi
+
+# Keep-alive: update existing `sudo` time stamp until `devtool` has finished
+while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+
+####################################################################################################
+# MACOS
+
+# If $platform is macos and $action is init, execute the following script: bin/initialize_macos.sh
+if [ "$platform" == "macos" ] && [ "$action" == "init" ]; then
+    echo "Initializing MacOS..."
+    source bin/macos_init.sh
+fi
+
+# If $platform is macos and $action is install, execute the following script for #type: bin/install_macos_type.sh
+if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
+    # List the packages to be installed from ./lib/macos/brew/$type file.
+    echo "==> The following packages will be ${action}ed:"
+    cat ./lib/macos/brew/$type | sed 's/^/- /'
+    echo
+
+    # Ask for confirmation before installing the packages
+    for package in $(cat ./lib/macos/brew/$type); do
+        echo -n "Do you want to $action $package? (y/n): "
+        read -r CONTINUE
+
+        # Convert input to lowercase using tr and use case-insensitive comparison
+        if [[ $(echo "$CONTINUE" | tr '[:upper:]' '[:lower:]') == "y" ]]; then
+            echo "==> ${action}ing $package..."
+            brew $action $package
+        else
+            echo
+            echo "==> Skipping $package..."
+        fi
+        echo
+    done
+fi
+
+####################################################################################################
+# LINUX
+
+# If $platform is linux and $action is init, execute the following script: bin/initialize_linux.sh
+if [ "$platform" == "linux" ] && [ "$action" == "init" ]; then
+    echo "Initializing Linux..."
+    #source bin/initialize_linux.sh
+fi
+
