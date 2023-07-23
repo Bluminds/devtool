@@ -7,15 +7,18 @@ usage() {
     echo "  Options:"
     echo "    <platform>           Specify the platform: macos, linux, or windows."
     echo "    <action>             Specify the action to perform: init, install, uninstall, reinstall or setup."
-    echo "    [type]                Specify the type of setup (applicable only for 'install' or 'setup' actions):"
-    echo "                          - 'system': System-wide setup or configurations."
-    echo "                          - 'network': Setup for network-related tools."
-    echo "                          - 'escentials': Setup for escentials-related tools."
-    echo "                          - 'productivity': Setup for productivity tools."
-    echo "                          - 'development': Setup for development tools."
-    echo "                          - 'media': Setup for media tools."
-    echo "                          - 'social': Setup for social tools."
-    echo "                          - 'games': Setup for games."
+    echo "    [type]               Specify the type of action for 'install|uninstall|reinstall':"
+    echo "                          - 'system': System-wide installation."
+    echo "                          - 'network': installation for network-related tools."
+    echo "                          - 'escentials': installation for escentials-related tools."
+    echo "                          - 'productivity': installation for productivity tools."
+    echo "                          - 'development': installation for development tools."
+    echo "                          - 'media': installation for media tools."
+    echo "                          - 'social': installation for social tools."
+    echo "                          - 'games': installation for games."
+    echo
+    echo "                         Specify the type of action for 'setup':"
+    echo "                          - 'list': List apps available for 'setup' action."
     echo
     echo "  Examples:"
     echo "    $0 macos init"
@@ -47,10 +50,10 @@ if [[ $action != "init" && $action != "install" && $action != "uninstall" && $ac
     usage
 fi
 
-# Validate type argument for 'install' and 'setup' actions
-if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == "reinstall" ] || [ "$action" == "setup" ]; then
+# Validate type argument for 'install', 'reinstall' and 'uninstall' actions
+if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == "reinstall" ]; then
     if [ -z "$type" ]; then
-        echo "Error: Missing type argument for '${action}' or 'setup' action."
+        echo "Error: Missing type argument for '(|un|re)install' or 'setup' action."
         usage
     elif [[ $type != "system" && 
             $type != "escentials" &&
@@ -61,6 +64,19 @@ if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == 
             $type != "social" &&
             $type != "games" ]]; then
         echo "Error: Invalid type. Use one of system, escentials, productivity, network, development, media, social, or games."
+        usage
+    fi
+fi
+
+# Validate type argument for 'setup' actions
+if [ "$action" == "setup" ]; then
+    if [ -z "$type" ]; then
+        echo "Error: Missing type argument for 'setup' action."
+        usage
+    elif [[ $type != "list" && 
+            $type != "java" &&
+            $type != "raycst" ]]; then
+        echo "Error: Invalid type for action 'setup'."
         usage
     fi
 fi
@@ -91,17 +107,19 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 ####################################################################################################
 # MACOS
 
+#INIT
 # If $platform is macos and $action is init, execute the following script: bin/initialize_macos.sh
 if [ "$platform" == "macos" ] && [ "$action" == "init" ]; then
     echo "Initializing MacOS..."
     source bin/macos_init.sh
 fi
 
+# INSTALL / REINSTALL / UNINSTALL
 # If $platform is macos and $action is install, execute the following script for #type: bin/install_macos_type.sh
 if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
     # List the packages to be installed from ./lib/macos/brew/$type file.
     echo "==> The following packages will be ${action}ed:"
-    cat ./lib/macos/brew/$type | sed 's/^/- /'
+    cat ./lib/macos/brew/$type | sed 's/^/  /'
     echo
 
     # Ask for confirmation before installing the packages
@@ -119,6 +137,14 @@ if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == 
         fi
         echo
     done
+fi
+
+# SETUP
+# If $platform is macos and $action is setup and type is "list", list the folders in the ./lib/macos/app_settings folder
+if [ "$platform" == "macos" ] && [ "$action" == "setup" ] && [ "$type" == "list" ]; then
+    echo "==> The following app settings are available:"
+    ls -d ./lib/macos/app_settings/* | xargs -n1 basename | sed 's/^/  /'
+    echo
 fi
 
 ####################################################################################################
