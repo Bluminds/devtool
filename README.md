@@ -21,7 +21,7 @@ mkdir -p ~/workspace/Bluminds
 
 ```
 cd ~/workspace/Bluminds
-git clone https://github.com/Bluminds/dev_setup
+git clone https://github.com/Bluminds/devtool.git
 ```
 
 ## 1.2. Macos Software Installation
@@ -30,7 +30,7 @@ git clone https://github.com/Bluminds/dev_setup
 Execute the following command to install initial dependencies.
 
 ```
-cd ~/workspace/Bluminds/dev_setup
+cd ~/workspace/Bluminds/devtool
 ```
 
 ```
