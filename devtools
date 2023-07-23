@@ -42,7 +42,7 @@ if [[ $platform != "macos" && $platform != "linux" && $platform != "windows" ]];
 fi
 
 # Validate action argument
-if [[ $action != "init" && $action != "install" && $action != "unistall" && $action != "reinstall" && $action != "setup" ]]; then
+if [[ $action != "init" && $action != "install" && $action != "uninstall" && $action != "reinstall" && $action != "setup" ]]; then
     echo "Error: Invalid action. Use one of init, install, or setup."
     usage
 fi
@@ -52,8 +52,15 @@ if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == 
     if [ -z "$type" ]; then
         echo "Error: Missing type argument for '${action}' or 'setup' action."
         usage
-    elif [[ $type != "internet" && $type != "development" && $type != "system" ]]; then
-        echo "Error: Invalid type. Use one of internet, development, or system."
+    elif [[ $type != "system" && 
+            $type != "escentials" &&
+            $type != "productivity" &&
+            $type != "network" &&
+            $type != "development" &&
+            $type != "media" &&
+            $type != "social" &&
+            $type != "games" ]]; then
+        echo "Error: Invalid type. Use one of system, escentials, productivity, network, development, media, social, or games."
         usage
     fi
 fi
