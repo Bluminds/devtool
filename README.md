@@ -41,7 +41,7 @@ and follow the instructions.
 **Note:** If the command *brew* is not recognized, verify you have the PATH variable well setup in the ***~/.bashrc*** or ***~/.zshrc*** file. It should include the following line:
 
 ```
-export PATH=/opt/homebrew/bin:PATH
+export PATH=/opt/homebrew/bin:$PATH
 ```
 
 Re-open the *Terminal.app* or *iTerm2.app*.
