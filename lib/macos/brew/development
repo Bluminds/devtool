@@ -9,6 +9,7 @@ go
 rust
 ruby
 python@3.11
-openjdk@11
+openjdk
 openjdk@17
 maven
+corretto

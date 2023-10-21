@@ -2,3 +2,7 @@
 .DS_Store
 thumbs.db
 desktop.ini
+
+# IDE Folders
+.idea
+
