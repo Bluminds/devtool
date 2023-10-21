@@ -16,6 +16,7 @@ usage() {
     echo "                          - 'media': installation for media tools."
     echo "                          - 'social': installation for social tools."
     echo "                          - 'games': installation for games."
+    echo "                          - 'graphics': installation of graphics/video tools."
     echo
     echo "                         Specify the type of action for 'setup':"
     echo "                          - 'list': List apps available for 'setup' action."
@@ -62,8 +63,9 @@ if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == 
             $type != "development" &&
             $type != "media" &&
             $type != "social" &&
+            $type != "graphics" &&
             $type != "games" ]]; then
-        echo "Error: Invalid type. Use one of system, escentials, productivity, network, development, media, social, or games."
+        echo "Error: Invalid type. Use one of system, escentials, productivity, network, development, media, social, graphics, or games."
         usage
     fi
 fi
