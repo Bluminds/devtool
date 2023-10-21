@@ -13,3 +13,4 @@ openjdk
 openjdk@17
 maven
 corretto
+node
