@@ -6,11 +6,11 @@ usage() {
     echo "Usage: $0 <platform> <action> [type]"
     echo "  Options:"
     echo "    <platform>           Specify the platform: macos, linux, or windows."
-    echo "    <action>             Specify the action to perform: init, install, uninstall, reinstall or setup."
+    echo "    <action>             Specify the action to perform: init, install, uninstall, reinstall, versions or setup."
     echo "    [type]               Specify the type of action for 'install|uninstall|reinstall':"
     echo "                          - 'system': System-wide installation."
     echo "                          - 'network': installation for network-related tools."
-    echo "                          - 'escentials': installation for escentials-related tools."
+    echo "                          - 'essentials': installation for essentials-related tools."
     echo "                          - 'productivity': installation for productivity tools."
     echo "                          - 'development': installation for development tools."
     echo "                          - 'media': installation for media tools."
@@ -46,18 +46,26 @@ if [[ $platform != "macos" && $platform != "linux" && $platform != "windows" ]];
 fi
 
 # Validate action argument
-if [[ $action != "init" && $action != "install" && $action != "uninstall" && $action != "reinstall" && $action != "setup" ]]; then
-    echo "Error: Invalid action. Use one of init, install, or setup."
+if [[ $action != "init" ]] && \
+   [[ $action != "install" ]] && \
+   [[ $action != "uninstall" ]] && \
+   [[ $action != "reinstall" ]] && \
+   [[ $action != "setup" ]] && \
+   [[ $action != "versions" ]]; then
+    echo "Error: Invalid action. Use one of init, install, uninstall, reinstall, versions or setup."
     usage
 fi
 
-# Validate type argument for 'install', 'reinstall' and 'uninstall' actions
-if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == "reinstall" ]; then
+# Validate type argument for 'install', 'reinstall', 'uninstall' or 'versions' actions
+if [ "$action" == "install" ] || \
+    [ "$action" == "uninstall" ] || \
+    [ "$action" == "reinstall" ] || \
+    [ "$action" == "versions" ]; then
     if [ -z "$type" ]; then
-        echo "Error: Missing type argument for '(|un|re)install' or 'setup' action."
+        echo "Error: Missing type argument for '(|un|re)install', versions or 'setup' action."
         usage
     elif [[ $type != "system" && 
-            $type != "escentials" &&
+            $type != "essentials" &&
             $type != "productivity" &&
             $type != "network" &&
             $type != "development" &&
@@ -65,7 +73,7 @@ if [ "$action" == "install" ] || [ "$action" == "uninstall" ] || [ "$action" == 
             $type != "social" &&
             $type != "graphics" &&
             $type != "games" ]]; then
-        echo "Error: Invalid type. Use one of system, escentials, productivity, network, development, media, social, graphics, or games."
+        echo "Error: Invalid type. Use one of system, essentials, productivity, network, development, media, social, graphics, or games."
         usage
     fi
 fi
@@ -107,6 +115,7 @@ fi
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 ####################################################################################################
+####################################################################################################
 # MACOS
 
 #INIT
@@ -120,6 +129,31 @@ fi
 # If $platform is macos and $action is install, execute the following script for #type: bin/install_macos_type.sh
 if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
     # List the packages to be installed from ./lib/macos/brew/$type file.
+    echo "==> The following packages will be ${action}ed:"
+    cat ./lib/macos/brew/$type | sed 's/^/  /'
+    echo
+
+    # Ask for confirmation before installing the packages
+    for package in $(cat ./lib/macos/brew/$type); do
+        echo -n "Do you want to $action $package? (y/n): "
+        read -r CONTINUE
+
+        # Convert input to lowercase using tr and use case-insensitive comparison
+        if [[ $(echo "$CONTINUE" | tr '[:upper:]' '[:lower:]') == "y" ]]; then
+            echo "==> ${action}ing $package..."
+            brew $action $package
+        else
+            echo
+            echo "==> Skipping $package..."
+        fi
+        echo
+    done
+fi
+
+# VERSION
+# If $platform is macos and $action is version, execute the following script for #type: bin/install_macos_type.sh
+if [ "$platform" == "macos" ] && { [ "$action" == "version" ]; }; then
+    # List the packages to verify their current from ./lib/macos/brew/$type file.
     echo "==> The following packages will be ${action}ed:"
     cat ./lib/macos/brew/$type | sed 's/^/  /'
     echo

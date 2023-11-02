@@ -54,7 +54,7 @@ Applications are grouped by category/type. Execute the following command to inst
 
 ```
 ./devtool macos install system
-./devtool macos install escentials
+./devtool macos install essentials
 ./devtool macos install network
 ./devtool macos install productivity
 ./devtool macos install development
