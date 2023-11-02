@@ -1,22 +1,71 @@
 #!/bin/bash
-# This script show the current versions of the  development tools in file ../lib/
-# Path: bin/macos_dev_versions.sh
 
-TOOLS=("java" "javac" "python" "go")
+# Check if a file name has been provided as an argument
+if [ "$#" -ne 1 ]; then
+    echo "Usage: $0 <file_name>"
+    exit 1
+fi
 
-echo "+--------+---------+"
-echo "| Tool   | Version |"
-echo "+--------+---------+"
+# File to check (provided as a command-line argument)
+file_name="$1"
 
-for tool in "${TOOLS[@]}"; do
-    if [[ $tool == "java" || $tool == "javac" ]]; then
-        version=$($tool -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')
-    elif [[ $tool == "go" ]]; then
-        version=$($tool version 2>&1 | awk '{print $3}')
+# Base directory where the app list is located
+base_dir="../lib/macos/brew/"
+
+# Define padding for each column
+app_pad=25
+version_pad=20  # Adjust this if necessary to accommodate longer version strings
+
+# Temporary file for storing unsorted output
+temp_file=$(mktemp /tmp/app_versions.XXXXXX)
+
+# Function to check for app installation and version for both formulae and casks
+check_app_version() {
+    local app=$1
+    local installed_version=""
+
+    # Check if the app is installed and get the version
+    installed_info=$(brew list --versions "$app" 2>/dev/null)
+    if [[ $? -eq 0 ]]; then
+        installed_version=$(echo "$installed_info" | awk '{print $NF}') # Get the last field which is the version
     else
-        version=$($tool --version 2>&1 | head -n 1 | awk '{print $2}')
+        # Check for casks
+        installed_info=$(brew list --cask --versions "$app" 2>/dev/null)
+        if [[ $? -eq 0 ]]; then
+            installed_version=$(echo "$installed_info" | awk '{print $NF}')
+        else
+            installed_version="Not installed"
+        fi
     fi
-    printf "| %-6s | %-7s |\n" $tool $version
-done
 
-echo "+--------+---------+"
+    # Output the result to the temp file
+    printf "| %-${app_pad}s | %-${version_pad}s |\n" "$app" "$installed_version" >> "$temp_file"
+}
+
+# Construct the full file path
+file_path="$base_dir$file_name"
+
+# Check if the provided file path exists
+if [ ! -f "$file_path" ]; then
+    echo "Error: The file '$file_path' does not exist."
+    exit 1
+fi
+
+# Read the file and check each app
+while IFS= read -r app; do
+    # Skip empty lines and comments
+    [[ "$app" == \#* ]] || [[ -z "$app" ]] && continue
+    # Check the app's installation and version
+    check_app_version "$app"
+done < "$file_path"
+
+# Print the table header
+printf "| %-${app_pad}s | %-${version_pad}s |\n" "Application" "Installed Version"
+# Print the padded divider under the header
+printf "|=%-${app_pad}s=|=%-${version_pad}s=|\n" | tr ' ' '='
+
+# Sort the temp file and output the sorted information
+sort "$temp_file" | cat - # The 'cat -' is used to prevent 'sort' from using the temp file as both input and output
+
+# Clean up the temporary file
+rm "$temp_file"
