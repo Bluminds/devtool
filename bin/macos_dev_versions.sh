@@ -14,7 +14,7 @@ base_dir="../lib/macos/brew/"
 
 # Define padding for each column
 app_pad=25
-version_pad=20  # Adjust this if necessary to accommodate longer version strings
+version_pad=20
 
 # Temporary file for storing unsorted output
 temp_file=$(mktemp /tmp/app_versions.XXXXXX)
@@ -27,7 +27,7 @@ check_app_version() {
     # Check if the app is installed and get the version
     installed_info=$(brew list --versions "$app" 2>/dev/null)
     if [[ $? -eq 0 ]]; then
-        installed_version=$(echo "$installed_info" | awk '{print $NF}') # Get the last field which is the version
+        installed_version=$(echo "$installed_info" | awk '{print $NF}')
     else
         # Check for casks
         installed_info=$(brew list --cask --versions "$app" 2>/dev/null)
@@ -51,21 +51,35 @@ if [ ! -f "$file_path" ]; then
     exit 1
 fi
 
+# Calculate total number of lines (for progress bar)
+total_lines=$(wc -l < "$file_path")
+current_line=0
+
 # Read the file and check each app
 while IFS= read -r app; do
+    # Update progress
+    let "current_line++"
+    let "progress=(current_line*100/total_lines)"
+    
     # Skip empty lines and comments
     [[ "$app" == \#* ]] || [[ -z "$app" ]] && continue
+    
+    # Show progress bar
+    printf "\rChecking applications... %3d%%" "$progress"
+
     # Check the app's installation and version
     check_app_version "$app"
 done < "$file_path"
 
+# Move to a new line after progress bar completion
+echo ""
+
 # Print the table header
 printf "| %-${app_pad}s | %-${version_pad}s |\n" "Application" "Installed Version"
-# Print the padded divider under the header
 printf "|=%-${app_pad}s=|=%-${version_pad}s=|\n" | tr ' ' '='
 
 # Sort the temp file and output the sorted information
-sort "$temp_file" | cat - # The 'cat -' is used to prevent 'sort' from using the temp file as both input and output
+sort "$temp_file" | cat -
 
 # Clean up the temporary file
 rm "$temp_file"
