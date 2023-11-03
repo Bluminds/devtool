@@ -81,3 +81,15 @@ done < ./lib/macos/app_settings/zsh/aliases
 echo
 echo "Please restart your computer to apply all the changes."
 echo
+
+# If DEVTOOL variable is not present in .zshrc, add it pointing to the current folder
+if [ ! -f "$HOME/.zshrc" ]; then
+  echo "export DEVTOOL=$PWD" >> $HOME/.zshrc
+else
+  if grep -Fxq "export DEVTOOL=$PWD" $HOME/.zshrc; then
+    echo " DEVTOOL variable already exists. Skipping..."
+  else
+    echo "export DEVTOOL=$PWD" >> $HOME/.zshrc
+    echo " Added: DEVTOOL=$PWD"
+  fi
+fi

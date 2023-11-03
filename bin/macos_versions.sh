@@ -9,8 +9,8 @@ fi
 # File to check (provided as a command-line argument)
 file_name="$1"
 
-# Base directory where the app list is located
-base_dir="../lib/macos/brew/"
+# Base directory where the app list is located in DEVTOOL env variable
+base_dir="$DEVTOOL/lib/macos/brew/"
 
 # Define padding for each column
 app_pad=25

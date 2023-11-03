@@ -105,7 +105,7 @@ if is_sudo_session_present; then
     echo "Sudo session is present."
     echo
 else
-    echo "This script will require sudo access for the ${action}ation."
+    echo "This script will require sudo access for the ${action} action."
     echo -n "Please enter your sudo "
     sudo -v
     echo
@@ -125,35 +125,17 @@ if [ "$platform" == "macos" ] && [ "$action" == "init" ]; then
     source bin/macos_init.sh
 fi
 
+# VERSION
+# If $platform is macos and $action is version, execute the following script for #type: ./bin/macos_versions.sh
+if [ "$platform" == "macos" ] && [ "$action" == "versions" ]; then
+    # Call script bin/macos_versions.sh with parameter $action
+    source ./bin/macos_versions.sh "$type"
+fi
+
 # INSTALL / REINSTALL / UNINSTALL
 # If $platform is macos and $action is install, execute the following script for #type: bin/install_macos_type.sh
 if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
     # List the packages to be installed from ./lib/macos/brew/$type file.
-    echo "==> The following packages will be ${action}ed:"
-    cat ./lib/macos/brew/$type | sed 's/^/  /'
-    echo
-
-    # Ask for confirmation before installing the packages
-    for package in $(cat ./lib/macos/brew/$type); do
-        echo -n "Do you want to $action $package? (y/n): "
-        read -r CONTINUE
-
-        # Convert input to lowercase using tr and use case-insensitive comparison
-        if [[ $(echo "$CONTINUE" | tr '[:upper:]' '[:lower:]') == "y" ]]; then
-            echo "==> ${action}ing $package..."
-            brew $action $package
-        else
-            echo
-            echo "==> Skipping $package..."
-        fi
-        echo
-    done
-fi
-
-# VERSION
-# If $platform is macos and $action is version, execute the following script for #type: bin/install_macos_type.sh
-if [ "$platform" == "macos" ] && { [ "$action" == "version" ]; }; then
-    # List the packages to verify their current from ./lib/macos/brew/$type file.
     echo "==> The following packages will be ${action}ed:"
     cat ./lib/macos/brew/$type | sed 's/^/  /'
     echo
