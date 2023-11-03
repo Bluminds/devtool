@@ -122,14 +122,14 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 # If $platform is macos and $action is init, execute the following script: bin/initialize_macos.sh
 if [ "$platform" == "macos" ] && [ "$action" == "init" ]; then
     echo "Initializing MacOS..."
-    source bin/macos_init.sh
+    source $DEVTOOL/bin/macos_init.sh
 fi
 
 # VERSION
 # If $platform is macos and $action is version, execute the following script for #type: ./bin/macos_versions.sh
 if [ "$platform" == "macos" ] && [ "$action" == "versions" ]; then
     # Call script bin/macos_versions.sh with parameter $action
-    source ./bin/macos_versions.sh "$type"
+    source $DEVTOOL/bin/macos_versions.sh "$type"
 fi
 
 # INSTALL / REINSTALL / UNINSTALL
@@ -137,7 +137,7 @@ fi
 if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
     # List the packages to be installed from ./lib/macos/brew/$type file.
     echo "==> The following packages will be ${action}ed:"
-    cat ./lib/macos/brew/$type | sed 's/^/  /'
+    cat $DEVTOOL/lib/macos/brew/$type | sed 's/^/  /'
     echo
 
     # Ask for confirmation before installing the packages
@@ -161,7 +161,7 @@ fi
 # If $platform is macos and $action is setup and type is "list", list the folders in the ./lib/macos/app_settings folder
 if [ "$platform" == "macos" ] && [ "$action" == "setup" ] && [ "$type" == "list" ]; then
     echo "==> The following app settings are available:"
-    ls -d ./lib/macos/app_settings/* | xargs -n1 basename | sed 's/^/  /'
+    ls -d $DEVTOOL/lib/macos/app_settings/* | xargs -n1 basename | sed 's/^/  /'
     echo
 fi
 

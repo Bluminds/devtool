@@ -90,6 +90,7 @@ else
     echo " DEVTOOL variable already exists. Skipping..."
   else
     echo "export DEVTOOL=$PWD" >> $HOME/.zshrc
+    echo "export PATH=$DEVTOOL:$PATH" >> ~/.zshrc
     echo " Added: DEVTOOL=$PWD"
   fi
 fi

@@ -50,15 +50,15 @@ Re-open the *Terminal.app* or *iTerm2.app*.
 
 ### 1.2.2. Initial Software
 
-Applications are grouped by category/type. Execute the following command to install/reinstall/uninstall the set of apps.
+Applications are grouped by category/type. Execute the following command to install/reinstall/uninstall/versions the set of apps.
 
 ```
-./devtool macos install system
-./devtool macos install essentials
-./devtool macos install network
-./devtool macos install productivity
-./devtool macos install development
-./devtool macos install media
-./devtool macos install games
-./devtool macos install social
+devtool macos install system
+devtool macos install essentials
+devtool macos install network
+devtool macos install productivity
+devtool macos install development
+devtool macos install media
+devtool macos install games
+devtool macos install social
 ```
