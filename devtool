@@ -17,6 +17,7 @@ usage() {
     echo "                          - 'social': installation for social tools."
     echo "                          - 'games': installation for games."
     echo "                          - 'graphics': installation of graphics/video tools."
+    echo "                          - 'all': installation of all tools."
     echo
     echo "                         Specify the type of action for 'setup':"
     echo "                          - 'list': List apps available for 'setup' action."
@@ -72,8 +73,9 @@ if [ "$action" == "install" ] || \
             $type != "media" &&
             $type != "social" &&
             $type != "graphics" &&
-            $type != "games" ]]; then
-        echo "Error: Invalid type. Use one of system, essentials, productivity, network, development, media, social, graphics, or games."
+            $type != "games" &&
+            $type != "all" ]]; then
+        echo "Error: Invalid type. Use one of system, essentials, productivity, network, development, media, social, graphics, games, or all."
         usage
     fi
 fi

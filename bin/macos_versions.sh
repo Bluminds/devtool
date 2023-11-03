@@ -2,12 +2,18 @@
 
 # Check if a file name has been provided as an argument
 if [ "$#" -ne 1 ]; then
-    echo "Usage: $0 <file_name>"
+    echo "Usage: $0 <file_name>|all"
     exit 1
 fi
 
 # File to check (provided as a command-line argument)
 file_name="$1"
+
+if [ "$file_name" == "all" ]; then
+    cargo install --list
+    npm list -g
+    file_name="development"
+fi
 
 # Base directory where the app list is located in DEVTOOL env variable
 base_dir="$DEVTOOL/lib/macos/brew/"

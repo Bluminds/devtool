@@ -62,3 +62,8 @@ devtool macos install media
 devtool macos install games
 devtool macos install social
 ```
+
+For application versions
+```
+devtool macos install develop
+```
