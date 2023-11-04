@@ -4,6 +4,7 @@ anaconda
 postman
 omnigraffle
 emacs
+docker
 awscli
 go
 rust
@@ -15,3 +16,4 @@ maven
 corretto
 node
 protobuf
+perl
