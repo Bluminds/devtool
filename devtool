@@ -102,19 +102,21 @@ is_sudo_session_present() {
     return $?
 }
 
-# Check if the sudo session is present
-if is_sudo_session_present; then
-    echo "Sudo session is present."
-    echo
-else
-    echo "This script will require sudo access for the ${action} action."
-    echo -n "Please enter your sudo "
-    sudo -v
-    echo
-fi
+# Check if the sudo session is present if $type is not "versions"
+if [ "$action" != "versions" ]; then
+    if is_sudo_session_present; then
+        echo "Sudo session is present."
+        echo
+    else
+        echo "This script will require sudo access for the ${action} action."
+        echo -n "Please enter your sudo "
+        sudo -v
+        echo
+    fi
 
-# Keep-alive: update existing `sudo` time stamp until `devtool` has finished
-while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+    # Keep-alive: update existing `sudo` time stamp until `devtool` has finished
+    while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
+fi
 
 ####################################################################################################
 ####################################################################################################

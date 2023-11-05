@@ -10,8 +10,25 @@ fi
 file_name="$1"
 
 if [ "$file_name" == "all" ]; then
+    echo 
+    echo "###################################################################################################################"
+    echo "#### RUST (Cargo) >> cargo install --list"
     cargo install --list
+
+    echo
+    echo "###################################################################################################################"
+    echo "#### nvm (Node versions) >> nvm list"
+    source $NVM_DIR/nvm.sh
+    nvm list
+
+    echo
+    echo "###################################################################################################################"
+    echo "#### npm (Node Modules) >> npm list -g"
     npm list -g
+
+    echo
+    echo "###################################################################################################################"
+    echo "#### devtool development >> devtool macos versions development"
     file_name="development"
 fi
 
