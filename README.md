@@ -1,5 +1,48 @@
 # New Computer Setup Scripts
-This repository contains the scripts to automatically setup a new computer (Macos, Linux and Windows).
+This repository contains the scripts to automatically setup a new computer (Macos, Ubuntu and Windows).
+
+# Tool Usage
+
+Applications are grouped by category/type. Execute the following command to install/reinstall/uninstall/versions the set of apps.
+
+### In Macos
+
+```
+devtool macos install system
+devtool macos install essentials
+devtool macos install network
+devtool macos install productivity
+devtool macos install development
+devtool macos install media
+devtool macos install social
+devtool macos install games
+devtool macos install graphics
+```
+
+For application versions
+```
+devtool macos versions development
+devtool macos versions all
+```
+
+### In Ubuntu Linux
+```
+devtool ubuntu install system
+devtool ubuntu install essentials
+devtool ubuntu install network
+devtool ubuntu install productivity
+devtool ubuntu install development
+devtool ubuntu install media
+devtool ubuntu install social
+devtool ubuntu install games
+devtool ubuntu install graphics
+```
+
+For application versions
+```
+devtool ubuntu versions development
+devtool ubuntu versions all
+```
 
 # 1. Macos Installation
 
@@ -48,22 +91,5 @@ Re-open the *Terminal.app* or *iTerm2.app*.
 
 ***NOTE:*** After the installation, take a close look at the Errors and Warnings displayed in the screen. They might require additional configuration. 
 
-### 1.2.2. Initial Software
 
-Applications are grouped by category/type. Execute the following command to install/reinstall/uninstall/versions the set of apps.
-
-```
-devtool macos install system
-devtool macos install essentials
-devtool macos install network
-devtool macos install productivity
-devtool macos install development
-devtool macos install media
-devtool macos install games
-devtool macos install social
-```
-
-For application versions
-```
-devtool macos install develop
-```
+# 2. Ubuntu Installation
