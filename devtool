@@ -141,11 +141,11 @@ fi
 if [ "$platform" == "macos" ] && { [ "$action" == "install" ] || [ "$action" == "reinstall" ] || [ "$action" == "uninstall" ]; }; then
     # List the packages to be installed from ./lib/macos/brew/$type file.
     echo "==> The following packages will be ${action}ed:"
-    cat $DEVTOOL/lib/macos/brew/$type | sed 's/^/  /'
+    cat $DEVTOOL/lib/macos/brew/$type | sed '/^#/d' | sed 's/^/  /'
     echo
 
     # Ask for confirmation before installing the packages
-    for package in $(cat ./lib/macos/brew/$type); do
+    for package in $(cat ./lib/macos/brew/$type | sed '/^#/d'); do
         echo -n "Do you want to $action $package? (y/n): "
         read -r CONTINUE
 
